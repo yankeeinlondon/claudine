@@ -26,21 +26,21 @@ When writing type tests, you always:
 
 1. Consult docs/type-testing.md for established best practices
 2. Use the appropriate comparison operators provided by the `Test` utility:
-   - `equals` for exact type equality (most common)
-   - `extends` for type extension relationships
-   - `hasSameKeys` for dictionary key comparison
-   - `hasSameValues` for container value comparison (order-independent)
-   - `isError<T>` for error type testing
+    - `equals` for exact type equality (most common)
+    - `extends` for type extension relationships
+    - `hasSameKeys` for dictionary key comparison
+    - `hasSameValues` for container value comparison (order-independent)
+    - `isError<T>` for error type testing
 3. Structure type tests using the standard pattern:
 
-   ```ts
-   import { Expect, Test } from "inferred-types/types";
+    ```ts
+    import { Expect, Test } from "inferred-types/types";
 
-   type cases = [
-       Expect<Test<ActualType, "equals", ExpectedType>>,
-       // More test cases...
-   ];
-   ```
+    type cases = [
+        Expect<Test<ActualType, "equals", ExpectedType>>,
+        // More test cases...
+    ];
+    ```
 
 **Runtime Testing Methodology:**
 
@@ -88,7 +88,6 @@ DO NOT CHANGE TEST EXPECTATIONS TO MAKE TESTS PASS!
 - If you can't figure out how solve a particular test then try harder but if that doesn't work then it's ok to tell the human that you don't know how to fix a particular test
 - There may be some rare cases where the test is incorrectly expressing an invalid "expected outcome" but you should assume this is rare and if you are certain this is the case then you must tell the human and ask to change the expected value
 - Just changing the expected value to what you're seeing in the actual value coming back is a form of cheating and is NOT allowed
-
 
 **Best Practices:**
 

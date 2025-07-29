@@ -1,4 +1,4 @@
-import { BlockingError, Error, Success } from "./types";
+import type { BlockingError, Error, Success } from "./types";
 
 export const SUCCESS: Success = 0;
 

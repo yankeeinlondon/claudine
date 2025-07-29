@@ -1,34 +1,34 @@
-import { IsUnion, Suggest } from "inferred-types";
+import type { EmptyObject, IsUnion, Suggest } from "inferred-types";
 
 /**
  * The hook's which Claude Code exposes.
  */
-export type HookEventName = 
-| "PreToolUse" 
-| "PostToolUse" 
-| "UserPromptSubmit" 
-| "Stop" 
-| "SubagentStope" 
-| "Notification"
-| "PreCompact"
-| "SessionStart";
+export type HookEventName
+= | "PreToolUse"
+    | "PostToolUse"
+    | "UserPromptSubmit"
+    | "Stop"
+    | "SubagentStope"
+    | "Notification"
+    | "PreCompact"
+    | "SessionStart";
 
-export type Tool = 
-| "Write" 
-| "Edit"
-| "Read"
-| "Glob"
-| "Grep"
-| "MultiEdit"
-| "WebFetch"
-| "WebSearch"
-| "Task"
-| `Bash(ls:*)`
-| `Bash(tsc:*)`
-| `Bash(rm:*)`
-| `Bash(git stash:*)`
-| `Bash(pnpm:*)`
-| `Bash(sed:*)`;
+export type Tool
+= | "Write"
+    | "Edit"
+    | "Read"
+    | "Glob"
+    | "Grep"
+    | "MultiEdit"
+    | "WebFetch"
+    | "WebSearch"
+    | "Task"
+    | `Bash(ls:*)`
+    | `Bash(tsc:*)`
+    | `Bash(rm:*)`
+    | `Bash(git stash:*)`
+    | `Bash(pnpm:*)`
+    | `Bash(sed:*)`;
 
 export type SuggestMatcher = Suggest<
     | Tool
@@ -36,30 +36,27 @@ export type SuggestMatcher = Suggest<
     | `WebFetch|WebSearch`
 >;
 
-
-export type HookCommand = {
+export interface HookCommand {
     /** optionally you may filter the Agent commands which will trigger this hook */
     matcher?: SuggestMatcher;
     command: Suggest<
         | "$CLAUDE_PROJECT_DIR/.claude/hooks/check-style.sh"
-    >
+    >;
 }
 
 export type Success = 0;
 export type Error = 1;
 export type BlockingError = 2;
 
-
-
 /**
  * **HookHandlerConfig**
- * 
+ *
  * The structure of what you'd put in your `.settings.json` or `.settings.local.json` file
- * to add handling for a specific event. 
- * 
+ * to add handling for a specific event.
+ *
  * **Note:** each "handler" is placed inside of the `hooks: { [event]: HookHandlerConfig[] }` part of the configuration file.
  */
-export type HookHandlerConfig = {
+export interface HookHandlerConfig {
     /**
      * You may filter the handler to only execute when one of the
      * specified `AgentCommand`'s is the source. You may also use the `|`
@@ -69,7 +66,7 @@ export type HookHandlerConfig = {
     matcher?: SuggestMatcher;
     /** the things you want to execute when  */
     hooks: HookCommand[];
-};
+}
 
 export type Hook<T extends HookEventName = HookEventName> = {
     session_id: string;
@@ -77,65 +74,65 @@ export type Hook<T extends HookEventName = HookEventName> = {
     cwd: string;
     hook_event_name: HookEventName;
 } & IsUnion<T> extends true
-? {}
-: T extends "PreToolUse"
-? {
-    hook_event_name: "PreToolUse";
-    tool_name: Suggest<Tool>;
-    tool_input: {
-        file_path: string;
-        content: string;
-    }
-}
-: T extends "PostToolUse"
-? {
-    hook_event_name: "PostToolUse";
-    tool_input: {
-        file_path: string;
-        content: string;
-    };
-    tool_response: {
-        filePath: string;
-        success: boolean;
-    }
-}
-: T extends "Notification"
-? {
-    hook_event_name: "Notification"
-    message: string;
-}
-: T extends "UserPromptSubmit"
-? {
-    hook_event_name: "UserPromptSubmit";
-    prompt: string;
-}
-: T extends "Stop"
-? {
-    hook_event_name: "Stop";
-    stop_hook_active: boolean;
-}
-: T extends "SubagentStop"
-? {
-    hook_event_name: "SubagentStop";
-    stop_hook_active: boolean;
-}
-: T extends "SessionStart"
-? {
-    hook_event_name: "SessionStart";
-    source: Suggest<"startup">;
-}
+    ? EmptyObject
+    : T extends "PreToolUse"
+        ? {
+                hook_event_name: "PreToolUse";
+                tool_name: Suggest<Tool>;
+                tool_input: {
+                    file_path: string;
+                    content: string;
+                };
+            }
+        : T extends "PostToolUse"
+            ? {
+                    hook_event_name: "PostToolUse";
+                    tool_input: {
+                        file_path: string;
+                        content: string;
+                    };
+                    tool_response: {
+                        filePath: string;
+                        success: boolean;
+                    };
+                }
+            : T extends "Notification"
+                ? {
+                        hook_event_name: "Notification";
+                        message: string;
+                    }
+                : T extends "UserPromptSubmit"
+                    ? {
+                            hook_event_name: "UserPromptSubmit";
+                            prompt: string;
+                        }
+                    : T extends "Stop"
+                        ? {
+                                hook_event_name: "Stop";
+                                stop_hook_active: boolean;
+                            }
+                        : T extends "SubagentStop"
+                            ? {
+                                    hook_event_name: "SubagentStop";
+                                    stop_hook_active: boolean;
+                                }
+                            : T extends "SessionStart"
+                                ? {
+                                        hook_event_name: "SessionStart";
+                                        source: Suggest<"startup">;
+                                    }
 
-: {};
+                                : EmptyObject;
 
 export type DecisionStrategy = "allow" | "deny" | "ask";
 
 /**
  * The RAW response of a hook response is either a Unix exit code:
- * 
+ *
  * - `0` - Success
  * - `1` - Error
  * - `2` - Blocking Error
- * 
+ *
  * Or a JSON stringified string of `HookResponse` sent to STDOUT.
  */
 export type HookResponseRaw = string | Success | Error | BlockingError;
@@ -146,54 +143,55 @@ export type HookResponse<T extends HookEventName> = (
         stopReason?: string;
         suppressOutput?: boolean;
     } & T extends "PreToolUse"
-    ? {
-        hookSpecificOutput?: {
-            hookEventName: "PreToolUse";
-            permissionDecision: DecisionStrategy;
-            permissionDecisionReason: string;
-        }
-        /** @deprecated */
-        decision?: DecisionStrategy;
-        /** @deprecated */
-        reason?: string;
-    }
-    : T extends "PostToolUse"
         ? {
-            decision?: "block" | undefined;
-            reason: string;
-        }
-    : T extends "UserPromptSubmit"
-    ? {
-        decision?: "block" | undefined,
-        reason: string;
-        hookSpecificOutput?: {
-            hookEventName: "UserPromptSubmit";
-            additionalContext: string;
-        }
-    }
-    : T extends "Stop" | "SubagentStop"
-    ? {
-        decision?: "block" | undefined;
-        /**
-         * Reason for stopping.
-         * 
-         * **Note:* must be provided when Claude is blocked from stopping
-         */
-        reason?: string;
-    }
-    : T extends "SessionStart"
-        ? {
-            hookSpecificOutput?: {
-                hookEventName: "SessionStart";
-                additionalContext: string;
+                hookSpecificOutput?: {
+                    hookEventName: "PreToolUse";
+                    permissionDecision: DecisionStrategy;
+                    permissionDecisionReason: string;
+                };
+                /** @deprecated */
+                decision?: DecisionStrategy;
+                /** @deprecated */
+                reason?: string;
             }
-        }
+        : T extends "PostToolUse"
+            ? {
+                    decision?: "block" | undefined;
+                    reason: string;
+                }
+            : T extends "UserPromptSubmit"
+                ? {
+                        decision?: "block" | undefined;
+                        reason: string;
+                        hookSpecificOutput?: {
+                            hookEventName: "UserPromptSubmit";
+                            additionalContext: string;
+                        };
+                    }
+                : T extends "Stop" | "SubagentStop"
+                    ? {
+                            decision?: "block" | undefined;
+                            /**
+                             * Reason for stopping.
+                             *
+                             * **Note:* must be provided when Claude is blocked from stopping
+                             */
+                            reason?: string;
+                        }
+                    : T extends "SessionStart"
+                        ? {
+                                hookSpecificOutput?: {
+                                    hookEventName: "SessionStart";
+                                    additionalContext: string;
+                                };
+                            }
 
-
-    : {}
-) 
+                        : EmptyObject
+)
 
 | Success | Error | BlockingError;
 
-
+/**
+ * A callback function which handle Claude Code hook events.
+ */
 export type HookHandler<T extends HookEventName> = <E extends Hook<T>>(event: E) => Promise<HookResponse<T>>;

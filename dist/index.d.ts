@@ -73,10 +73,63 @@ type Hook<T extends HookEventName = HookEventName> = {
   hook_event_name: "SessionStart";
   source: Suggest<"startup">;
 } : {};
+type DecisionStrategy = "allow" | "deny" | "ask";
+/**
+ * The RAW response of a hook response is either a Unix exit code:
+ *
+ * - `0` - Success
+ * - `1` - Error
+ * - `2` - Blocking Error
+ *
+ * Or a JSON stringified string of `HookResponse` sent to STDOUT.
+ */
+type HookResponseRaw = string | Success | Error | BlockingError;
+type HookResponse<T extends HookEventName> = ({
+  continue?: boolean;
+  stopReason?: string;
+  suppressOutput?: boolean;
+} & T extends "PreToolUse" ? {
+  hookSpecificOutput?: {
+    hookEventName: "PreToolUse";
+    permissionDecision: DecisionStrategy;
+    permissionDecisionReason: string;
+  };
+  /** @deprecated */
+  decision?: DecisionStrategy;
+  /** @deprecated */
+  reason?: string;
+} : T extends "PostToolUse" ? {
+  decision?: "block" | undefined;
+  reason: string;
+} : T extends "UserPromptSubmit" ? {
+  decision?: "block" | undefined;
+  reason: string;
+  hookSpecificOutput?: {
+    hookEventName: "UserPromptSubmit";
+    additionalContext: string;
+  };
+} : T extends "Stop" | "SubagentStop" ? {
+  decision?: "block" | undefined;
+  /**
+   * Reason for stopping.
+   *
+   * **Note:* must be provided when Claude is blocked from stopping
+   */
+  reason?: string;
+} : T extends "SessionStart" ? {
+  hookSpecificOutput?: {
+    hookEventName: "SessionStart";
+    additionalContext: string;
+  };
+} : {}) | Success | Error | BlockingError;
+/**
+ * A callback function which handle Claude Code hook events.
+ */
+type HookHandler<T extends HookEventName> = <E extends Hook<T>>(event: E) => Promise<HookResponse<T>>;
 //#endregion
 //#region src/constants.d.ts
 declare const SUCCESS: Success;
 declare const ERROR: Error;
 declare const BLOCKING_ERROR: BlockingError;
 //#endregion
-export { BLOCKING_ERROR, BlockingError, ERROR, Error, Hook, HookCommand, HookEventName, HookHandlerConfig, SUCCESS, Success, SuggestMatcher, Tool };
+export { BLOCKING_ERROR, BlockingError, DecisionStrategy, ERROR, Error, Hook, HookCommand, HookEventName, HookHandler, HookHandlerConfig, HookResponse, HookResponseRaw, SUCCESS, Success, SuggestMatcher, Tool };
