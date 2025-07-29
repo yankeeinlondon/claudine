@@ -34,10 +34,10 @@ You can, if you prefer, just use the types which this library provides.
 
 | <span style="font-weight: 200">Manager</span>| <span style="font-weight: 200">Shell Command</span> |
 | --- | --- |
-| **npm** | npm install @yankeeinlondon/gotcha  |
-| **pnpm** | pnpm add @yankeeinlondon/gotcha | 
-| **yarn** | yarn add @yankeeinlondon/gotcha | 
-| **bun** | bun add @yankeeinlondon/gotcha | 
+| **npm** | npm install @yankeeinlondon/claudine  |
+| **pnpm** | pnpm add @yankeeinlondon/claudine | 
+| **yarn** | yarn add @yankeeinlondon/claudine | 
+| **bun** | bun add @yankeeinlondon/claudine | 
 
 
 <details>
@@ -48,7 +48,7 @@ Click here for **Deno** and **JSR** installation details
 ### Deno/JSR
 
 ```ts
-import { gotcha, isOk } from "jsr:@yankeeinlondon/gotcha";
+import { createHook } from "jsr:@yankeeinlondon/claudine";
 ```
 
 Or add to your `deno.json`:
@@ -56,7 +56,7 @@ Or add to your `deno.json`:
 ```json
 {
   "imports": {
-    "gotcha": "jsr:@yankeeinlondon/gotcha"
+    "claudine": "jsr:@yankeeinlondon/claudine"
   }
 }
 ```
@@ -64,7 +64,7 @@ Or add to your `deno.json`:
 ### GitHub Packages
 
 ```bash
-npm install @yankeeinlondon/gotcha --registry=https://npm.pkg.github.com
+npm install @yankeeinlondon/claudine --registry=https://npm.pkg.github.com
 ```
 
 Or configure `.npmrc`:

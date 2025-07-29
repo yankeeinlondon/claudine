@@ -7,6 +7,8 @@ import { Unexpected } from "./errors";
  * **createHook**(hook)
  *
  * A builder pattern for handing Claude Code hooks.
+ * 
+ * - [Docs](https://docs.anthropic.com/en/docs/claude-code/hooks) for Claude Hooks
  */
 export function createHook<T extends HookEventName>(
     _hook: T
