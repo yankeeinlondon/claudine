@@ -24,6 +24,8 @@
     "author": "Ken Snyder <ken@ken.net>",
     "license": "MIT",
     "dependencies": {
+        "@yankeeinlondon/kind-error": "^1.4.1",
+        "chalk": "^5.4.1",
         "inferred-types": "^0.55.23"
     },
     "devDependencies": {
