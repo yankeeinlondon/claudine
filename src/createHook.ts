@@ -22,7 +22,7 @@ export function createHook<T extends HookEventName>(
                     }
                     return lines.join("\n");
                 };
-    
+
                 return {
                     /**
                      * **handle()**
@@ -35,7 +35,7 @@ export function createHook<T extends HookEventName>(
                         const text = await readStdIn();
                         const event = JSON.parse(text) as Hook<T>;
                         const resp = await handler(event);
-    
+
                         if (isNumber(resp)) {
                             process.exit(resp);
                         }
@@ -44,7 +44,8 @@ export function createHook<T extends HookEventName>(
                         }
                     }
                 };
-            } catch (e) {
+            }
+            catch (e) {
                 throw Unexpected.proxy(e);
             }
         }
