@@ -1,0 +1,44 @@
+{
+    "name": "@yankeeinlondon/claudine",
+    "version": "0.1.0",
+    "description": "A simple library to help with Claude Code",
+    "type": "module",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsdown src/index.ts --format=esm,cjs --dts",
+        "lint": "eslint src",
+        "release": "bumpp",
+        "test": "echo 'no tests yet'"
+    },
+    "keywords": [
+        "Claude"
+    ],
+    "author": "Ken Snyder <ken@ken.net>",
+    "license": "MIT",
+    "dependencies": {
+        "inferred-types": "^0.55.23"
+    },
+    "devDependencies": {
+        "@antfu/eslint-config": "^5.0.0",
+        "@type-challenges/utils": "^0.1.1",
+        "@types/bun": "^1.2.19",
+        "@types/node": "^22.17.0",
+        "bumpp": "^10.2.1",
+        "eslint": "^9.32.0",
+        "eslint-plugin-format": "^1.0.1",
+        "husky": "^9.1.7",
+        "jiti": "^2.5.1",
+        "npm-run-all": "^4.1.5",
+        "tsdown": "^0.13.0",
+        "typescript": "^5.8.3",
+        "vitest": "^3.2.4"
+    }
+}
