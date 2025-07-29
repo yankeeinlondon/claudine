@@ -1,6 +1,6 @@
 {
     "name": "@yankeeinlondon/claudine",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "A simple library to help with Claude Code",
     "type": "module",
     "main": "dist/index.cjs",
